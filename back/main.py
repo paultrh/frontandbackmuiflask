@@ -2,7 +2,7 @@ from flask import Flask
 from flask_cors import CORS
 import pandas as pd
 from flask import request
-from process import get_data, get_elements
+from process import get_data, get_elements, get_chart_data, read_json_from_file, save_json_to_file
 
 app = Flask(__name__, static_folder='../front/build', static_url_path='/')
 CORS(app)
@@ -16,6 +16,21 @@ def get_website():
 def get_dataframe():
     df = get_data()
     return {'html': df.to_html()}
+
+
+@app.route("/dfjson")
+def get_dt2():
+    df = get_data()
+    chart = get_chart_data(df)
+    save_json_to_file(chart, 'chart.json')
+    return chart
+
+
+@app.route("/dfjsonREAD")
+def get_dt3():
+    return read_json_from_file('chart.json')
+
+
 
 @app.route("/chart/")
 @app.route("/chart/<index>")

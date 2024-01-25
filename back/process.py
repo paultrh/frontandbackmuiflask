@@ -14,7 +14,39 @@ def get_data():
     df = pd.DataFrame(data)
     
     return df
+
+
+import json
+
+# Function to save JSON data to a file
+def save_json_to_file(data, filename):
+    try:
+        with open(filename, 'w') as file:
+            json.dump(data, file, indent=4)
+        print(f"JSON data saved to {filename}")
+    except Exception as e:
+        print(f"Error while saving JSON data to {filename}: {e}")
+
+# Function to read JSON data from a file
+def read_json_from_file(filename):
+    try:
+        with open(filename, 'r') as file:
+            data = json.load(file)
+        return data
+    except Exception as e:
+        print(f"Error while reading JSON data from {filename}: {e}")
+        return None
  
+
+def get_chart_data(df):
+    cols = df.columns.to_list()
+    chart = {'labels': df.index.tolist(), 'datasets': []}
+    for col in df.columns:
+        chart['datasets'].append({
+            'label': col,
+            'data': df[col].values.tolist()
+        })
+    return {'chart': chart, 'cols': cols, 'html': df.to_html()}
 
 def get_elements(type):
     """
